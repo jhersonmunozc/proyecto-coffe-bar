@@ -1,0 +1,681 @@
+﻿{
+  "info": {
+    "_postman_id": "cafesino-api-2026",
+    "name": "Cafésino - Sistema de Sincronización de Inventario",
+    "description": "API REST Completa - v5.0 FINAL\nTodos los endpoints documentados hasta el avance actual",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "🔐 AUTENTICACIÓN",
+      "item": [
+        {
+          "name": "1️⃣ Login Barista",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var token = pm.response.json().token;",
+                  "    pm.environment.set('barista_token', token);",
+                  "    pm.environment.set('barista_id', 'U001');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"juan@cafesino.com\",\"password\":\"password123\"}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "login"]
+            }
+          }
+        },
+        {
+          "name": "1️⃣ Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var token = pm.response.json().token;",
+                  "    pm.environment.set('admin_token', token);",
+                  "    pm.environment.set('admin_id', 'U002');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"admin@cafesino.com\",\"password\":\"admin123\"}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "login"]
+            }
+          }
+        },
+        {
+          "name": "2️⃣ Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{barista_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/logout",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "logout"]
+            }
+          }
+        },
+        {
+          "name": "3️⃣ Recuperar Contraseña",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"juan@cafesino.com\"}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/recuperar-contrasena",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "recuperar-contrasena"]
+            }
+          }
+        },
+        {
+          "name": "4️⃣ Restablecer Contraseña",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"token\":\"token_recuperacion\",\"nuevaContrasena\":\"nueva123\"}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/restablecer-contrasena",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "restablecer-contrasena"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📋 MENÚ PÚBLICO",
+      "item": [
+        {
+          "name": "Menú Dinámico Completo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/productos/menu",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "productos", "menu"]
+            }
+          }
+        },
+        {
+          "name": "Menú Filtrado por Categoría",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/productos/menu?categoria=Bebida",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "productos", "menu"],
+              "query": [{"key": "categoria", "value": "Bebida"}]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "💳 VENTAS",
+      "item": [
+        {
+          "name": "Registrar Venta (Barista)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{barista_token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"venta_id\":\"V1001\",\"productos\":[{\"prod_id\":\"P004\",\"cantidad\":1}],\"total\":4500}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/ventas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "ventas"]
+            }
+          }
+        },
+        {
+          "name": "Reporte Ventas Diarias (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/ventas/reporte/diario",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "ventas", "reporte", "diario"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🚨 ALERTAS",
+      "item": [
+        {
+          "name": "Obtener Alertas No Vistas (Barista)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{barista_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/alertas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "alertas"]
+            }
+          }
+        },
+        {
+          "name": "Historial Completo de Alertas (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/alertas/historial/todas?visto=false&limit=50&offset=0",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "alertas", "historial", "todas"],
+              "query": [
+                {"key": "visto", "value": "false"},
+                {"key": "limit", "value": "50"},
+                {"key": "offset", "value": "0"}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📦 INGREDIENTES",
+      "item": [
+        {
+          "name": "Crear Ingrediente (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"ing_id\":\"I010\",\"nombre\":\"Vainilla\",\"unidad\":\"ml\",\"stock\":500,\"minimo\":100}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/ingredientes",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "ingredientes"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Todos los Ingredientes (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/ingredientes",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "ingredientes"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Ingrediente por ID (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/ingredientes/I001",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "ingredientes", "I001"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Ingrediente (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nombre\":\"Café Premium\",\"minimo\":600}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/ingredientes/I001",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "ingredientes", "I001"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Ingrediente (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/ingredientes/I010",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "ingredientes", "I010"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Stock (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"ing_id\":\"I005\",\"cantidad\":1000}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/ingredientes/actualizar/stock",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "ingredientes", "actualizar", "stock"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🍽️ PRODUCTOS",
+      "item": [
+        {
+          "name": "Crear Producto (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prod_id\":\"P010\",\"nombre\":\"Expreso Doble\",\"categoria\":\"Bebida\",\"precio\":6000,\"disponible\":true}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/productos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "productos"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Todos los Productos (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/productos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "productos"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Producto por ID (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/productos/P001",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "productos", "P001"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Producto (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"precio\":7000,\"disponible\":true}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/productos/P001",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "productos", "P001"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Producto (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/productos/P010",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "productos", "P010"]
+            }
+          }
+        },
+        {
+          "name": "KPI: Producto Más Vendido (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/productos/kpi/top-vendido",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "productos", "kpi", "top-vendido"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📖 RECETAS",
+      "item": [
+        {
+          "name": "Crear Receta (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prod_id\":\"P005\",\"ingredientes\":[{\"ing_id\":\"I003\",\"cantidad\":50},{\"ing_id\":\"I005\",\"cantidad\":15}]}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/recetas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "recetas"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Todas las Recetas (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/recetas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "recetas"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Receta por Producto (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/recetas/P001",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "recetas", "P001"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Receta (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"ingredientes\":[{\"ing_id\":\"I003\",\"cantidad\":60},{\"ing_id\":\"I005\",\"cantidad\":12}]}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/recetas/P005",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "recetas", "P005"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Receta (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/recetas/P005",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "recetas", "P005"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 USUARIOS",
+      "item": [
+        {
+          "name": "Crear Usuario (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"usuario_id\":\"U003\",\"nombre\":\"Carlos\",\"rol\":\"Barista\",\"email\":\"carlos@cafesino.com\",\"password\":\"pass123\"}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/usuarios",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "usuarios"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Todos los Usuarios (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/usuarios",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "usuarios"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Usuario por ID (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/usuarios/U001",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "usuarios", "U001"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar Usuario (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nombre\":\"Juan Carlos\",\"email\":\"juan2@cafesino.com\"}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/usuarios/U001",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "usuarios", "U001"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Usuario (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admin_token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/usuarios/U003",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "usuarios", "U003"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {"key": "base_url", "value": "http://localhost:3000"},
+    {"key": "barista_token", "value": ""},
+    {"key": "admin_token", "value": ""},
+    {"key": "barista_id", "value": "U001"},
+    {"key": "admin_id", "value": "U002"}
+  ]
+}

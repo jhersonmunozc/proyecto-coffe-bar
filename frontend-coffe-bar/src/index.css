@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600;700;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-cafe-espresso:  #000000;
+  --color-cafe-tostado:   #af4c0f;
+  --color-cafe-latte:     #C4956A;
+  --color-cafe-crema:     #f8f4ec;
+  --color-cafe-vapor:     #EEE8E0;
+  --color-alerta-critica: #DC2626;
+  --color-alerta-baja:    #F59E0B;
+  --color-disponible:     #16A34A;
+  --color-no-disponible:  #9CA3AF;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+}
+
+:root {
+  /* Legacy tokens (kept for backward compat) */
+  --cafe-espresso: #000000;
+  --cafe-tostado:  #af4c0f;
+  --cafe-latte:    #C4956A;
+  --cafe-crema:    #f8f4ec;
+
+  /* Admin design system */
+  --cafe:        #C85A12;
+  --cafe-dark:   #8B3A07;
+  --cafe-light:  #F0E4D4;
+  --bg:          #FAF7F4;
+  --surface:     #FFFFFF;
+  --border:      #E8DDD4;
+  --text:        #2C1A0E;
+  --muted:       #8A7060;
+  --green:       #2D7A4F;
+  --green-bg:    #E8F5EE;
+  --amber:       #C07B1A;
+  --amber-bg:    #FEF3E2;
+  --red:         #C0392B;
+  --red-bg:      #FDECEA;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background-color: var(--cafe-espresso);
+  color: var(--cafe-crema);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root { min-height: 100svh; }
+
+@keyframes fadeInRow {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .login-left { display: none !important; }
+  .login-mobile-logo { display: flex !important; }
+}
+
+.login-btn-loading { position: relative; }
+.login-btn-loading span { opacity: 0; }
+.login-btn-loading::after {
+  content: '';
+  position: absolute;
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: spin 0.7s linear infinite;
+}
