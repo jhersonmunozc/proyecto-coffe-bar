@@ -1,0 +1,47 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: cafesino-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  backend:
+    build:
+      context: ./coffer-bar
+      dockerfile: Dockerfile
+    container_name: cafesino-backend
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      MONGODB_URI: mongodb://mongo:27017/db-sincronizacion-inventario
+      JWT_SECRET: ${JWT_SECRET:-cambiar-en-produccion}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-24h}
+      BCRYPT_ROUNDS: ${BCRYPT_ROUNDS:-10}
+    ports:
+      - '3000:3000'
+
+  frontend:
+    build:
+      context: ./frontend-coffe-bar
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:3000/api}
+    container_name: cafesino-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - '8080:80'
+
+volumes:
+  mongo_data:
